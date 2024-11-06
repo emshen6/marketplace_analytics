@@ -42,6 +42,7 @@ def check_data_available(date):
     params = {
         "date": date.strftime("%Y-%m-%d")
     }
+
     try:
         response = requests.get(API_URL, params=params)
         if response.status_code == 200 and response.json():
@@ -52,6 +53,7 @@ def check_data_available(date):
         logging.error(f"Connection error: {e}")
         return False
 
+'''
 def find_earliest_available_date():
     """Использует бинарный поиск для нахождения самой ранней доступной даты с данными."""
 
@@ -68,12 +70,17 @@ def find_earliest_available_date():
 
     logging.info(f"Earliest available data found on: {start_date}")
     return start_date
+'''
 
-earliest_date = find_earliest_available_date()
+date = pd.to_datetime(input())
+print(check_data_available(date))
 
+
+'''
 params = {
     "date": earliest_date.strftime("%Y-%m-%d")
 }
+
 
 try:
     response = requests.get(API_URL, params=params)
@@ -85,3 +92,4 @@ try:
         logging.error(f"Error {response.status_code}: {response.text}")
 except requests.exceptions.RequestException as e:
     logging.error(f"Connection error: {e}")
+'''
