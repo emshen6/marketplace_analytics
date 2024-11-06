@@ -7,8 +7,6 @@ from datetime import datetime, timedelta
 from pgdb import PGDatabase
 import json
 
-from get_data_for_day import get_data_for_day
-
 dirname = os.path.dirname(__file__)
 config = configparser.ConfigParser()
 config.read(os.path.join(dirname, "config.ini"))
