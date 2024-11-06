@@ -46,7 +46,7 @@ database = PGDatabase(
 )
 
 for i, row in clients_df.iterrows():
-    query = f"insert into clients values ('{row['client_id']}', '{row['company']}')"
+    query = f"insert into clients values ('{row['client_id']}', '{row['gender']}')"
     database.post(query)
 
 for i, row in products_df.iterrows():
