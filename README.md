@@ -91,7 +91,6 @@ CREATE TABLE Clients (
 
 CREATE TABLE Products (
     product_id INT PRIMARY KEY,
-    product_name VARCHAR(255),
     price_per_item INT,
     discount_per_item INT
 );
