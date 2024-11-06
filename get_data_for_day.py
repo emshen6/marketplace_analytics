@@ -25,7 +25,7 @@ logging.basicConfig(
 
 def get_data_for_date(date: datetime) -> None:
     params = {
-        "date": date.strftime("%Y-%m-%d")  # Форматируем дату в строку для запроса
+        "date": date.strftime("%Y-%m-%d")
     }
     
     try:
