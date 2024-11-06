@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from pgdb import PGDatabase
 import json
 
+
 dirname = os.path.dirname(__file__)
 config = configparser.ConfigParser()
 config.read(os.path.join(dirname, "config.ini"))
@@ -36,15 +37,46 @@ except Exception as e:
     logging.error(f"Error connecting to the database: {e}")
     raise
 
-date = pd.to_datetime("2021-12-01")
+def check_data_available(date):
+    """Проверяет наличие данных для указанной даты."""
+    params = {
+        "date": date.strftime("%Y-%m-%d")
+    }
+    try:
+        response = requests.get(API_URL, params=params)
+        if response.status_code == 200 and response.json():
+            return True
+        else:
+            return False
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Connection error: {e}")
+        return False
+
+def find_earliest_available_date():
+    """Использует бинарный поиск для нахождения самой ранней доступной даты с данными."""
+
+    end_date = pd.to_datetime("today")  # сегодня
+    start_date = end_date - timedelta(days=365 * 5)  # пять лет назад, например
+
+    while start_date < end_date:
+        middle_date = start_date + (end_date - start_date) // 2
+
+        if check_data_available(middle_date):
+            end_date = middle_date  # данные есть, ищем в более ранних датах
+        else:
+            start_date = middle_date + timedelta(days=1)  # данных нет, ищем в более поздних датах
+
+    logging.info(f"Earliest available data found on: {start_date}")
+    return start_date
+
+earliest_date = find_earliest_available_date()
 
 params = {
-    "date": date.strftime("%Y-%m-%d")
+    "date": earliest_date.strftime("%Y-%m-%d")
 }
-    
+
 try:
     response = requests.get(API_URL, params=params)
-
     if response.status_code == 200:
         with open(DATA_PATH, "w") as json_file:
             json.dump(response.json(), json_file, ensure_ascii=False, indent=4)
