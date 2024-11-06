@@ -1,10 +1,8 @@
 import configparser
 import os
-from datetime import datetime, timedelta
 import pandas as pd
 import json
 import logging
-
 from pgdb import PGDatabase
 
 dirname = os.path.dirname(__file__)
@@ -31,7 +29,6 @@ with open(DATA_PATH, "r", encoding="utf-8") as file:
 os.remove(DATA_PATH)
 
 df['purchase_datetime'] = pd.to_datetime(df['purchase_datetime']).dt.date
-
 df['purchase_time'] = (pd.to_datetime('00:00:00', format='%H:%M:%S') + 
                        pd.to_timedelta(df['purchase_time_as_seconds_from_midnight'], unit='s')).dt.time
 
@@ -46,13 +43,13 @@ database = PGDatabase(
 )
 
 for i, row in clients_df.iterrows():
-    query = f"insert into clients values ('{row['client_id']}', '{row['gender']}')"
+    query = f"INSERT INTO clients (client_id, gender) VALUES ({row['client_id']}, '{row['gender']}')"
     database.post(query)
 
 for i, row in products_df.iterrows():
-    query = f"insert into products values ('{row['product_id']}', 'NULL', '{row['price_per_item']}', '{row['discount_per_item']}')"
+    query = f"INSERT INTO products (product_id, price_per_item, discount_per_item) VALUES ({row['product_id']}, {row['price_per_item']}, {row['discount_per_item']})"
     database.post(query)
 
 for i, row in df.iterrows():
-    query = f"insert into purchases values ('{row['client_id']}', '{row['product_id']}', '{row['purchase_datetime']}', '{row['purchase_time']}', '{row['quantity']}', '{row['total_price']}')"
+    query = f"INSERT INTO purchases (client_id, product_id, purchase_datetime, purchase_time, quantity, total_price) VALUES ({row['client_id']}, {row['product_id']}, '{row['purchase_datetime']}', '{row['purchase_time']}', {row['quantity']}, {row['total_price']})"
     database.post(query)
