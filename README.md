@@ -116,3 +116,46 @@ CREATE INDEX idx_product_id ON Purchases(product_id);
 ```
 
 ![](img/6.png)
+
+13. Установить докер на сервер
+```
+apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+apt-cache policy docker-ce
+apt install docker-ce
+systemctl status docker
+```
+
+14. Получим контейнер для metabase
+
+```
+docker pull metabase/metabase:latest
+```
+
+15. Запустим контейнер на 3000 порту
+
+```
+docker run -d -p 3000:3000 --name metabase metabase/metabase
+```
+
+16. Установим и сконфигурируем веб-сервер nginx
+
+```
+apt install nginx
+cd /etc/nginx
+nano nginx.conf
+```
+Пропишем, какой порт будем слушать.
+![](img/7.png)
+
+```
+systemctl reload nginx
+```
+
+17. Переходим по <host_address>:3000, должен открыться интерфейс metabase. Добавим нашу базу данных, открыв SSH-туннель.
+
+![](img/8.png)
+![](img/9.png)
+
+ 18. Автоматизируем сбор данных ежедневно в 7 утра
