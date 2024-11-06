@@ -54,5 +54,5 @@ for i, row in products_df.iterrows():
     database.post(query)
 
 for i, row in df.iterrows():
-    query = f"insert into products values ('{row['client_id']}', '{row['product_id']}', '{row['purchase_datetime']}', '{row['purchase_time']}', '{row['quantity']}', '{row['total_price']}')"
+    query = f"insert into purchases values ('{row['client_id']}', '{row['product_id']}', '{row['purchase_datetime']}', '{row['purchase_time']}', '{row['quantity']}', '{row['total_price']}')"
     database.post(query)
