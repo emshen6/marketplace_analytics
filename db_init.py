@@ -10,7 +10,7 @@ dirname = os.path.dirname(__file__)
 config = configparser.ConfigParser()
 config.read(os.path.join(dirname, "config.ini"))
 
-API_URL = config["API"]["URL"]
+API_URL = config["API"]["API_URL"]
 DATABASE_CREDS = config["Database"]
 LOG_PATH = config["Files"]["LOG_PATH"]
 
