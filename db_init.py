@@ -36,7 +36,7 @@ except Exception as e:
     logging.error(f"Error connecting to the database: {e}")
     raise
 
-date = pd.to_datetime("2022-12-01")
+date = pd.to_datetime("2021-12-01")
 
 params = {
     "date": date.strftime("%Y-%m-%d")
