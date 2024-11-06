@@ -19,3 +19,12 @@
 2. Подключиться к серверу по SSH
 
 ![](img/1.png)
+
+3. На сервере склонировать данный репозиторий
+
+```
+cd ../home
+git clone https://github.com/emshen6/marketplace_analytics.git
+```
+
+4. 
