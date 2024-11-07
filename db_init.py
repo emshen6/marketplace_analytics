@@ -6,7 +6,7 @@ import requests
 from datetime import timedelta
 from pgdb import PGDatabase
 import json
-import tqdm
+from tqdm import tqdm
 
 dirname = os.path.dirname(__file__)
 config = configparser.ConfigParser()
