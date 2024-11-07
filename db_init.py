@@ -64,9 +64,6 @@ def find_earliest_available_date():
 def insert_data_to_db(df):
     try:
         clients_df = df[['client_id', 'gender']].drop_duplicates().sort_values(by='client_id')
-        products_df = df[['product_id', 'price_per_item', 'discount_per_item']].drop_duplicates().sort_values(by='product_id')
-        df = df.sort_values(by='purchase_time')
-
         for _, row in clients_df.iterrows():
             query = (
                 "INSERT INTO clients (client_id, gender) VALUES (%s, %s) "
@@ -74,21 +71,25 @@ def insert_data_to_db(df):
             )
             database.post(query, (row['client_id'], row['gender']))
 
+        products_df = df[['product_id', 'price_per_item', 'discount_per_item']].drop_duplicates().sort_values(by='product_id')
         for _, row in products_df.iterrows():
             query = (
                 "INSERT INTO products (product_id, price_per_item, discount_per_item) VALUES (%s, %s, %s) "
-                "ON CONFLICT (product_id) DO NOTHING"
+                "ON CONFLICT (product_id, price_per_item, discount_per_item) DO NOTHING"
             )
             database.post(query, (row['product_id'], row['price_per_item'], row['discount_per_item']))
 
+        df = df.sort_values(by='purchase_time')
         for _, row in df.iterrows():
             query = (
-                "INSERT INTO purchases (client_id, product_id, purchase_datetime, purchase_time, quantity, total_price) "
-                "VALUES (%s, %s, %s, %s, %s, %s)"
+                "INSERT INTO purchases (client_id, product_id, price_per_item, discount_per_item, purchase_datetime, "
+                "purchase_time, quantity, total_price) "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
             )
             database.post(
                 query, 
-                (row['client_id'], row['product_id'], row['purchase_datetime'], row['purchase_time'], row['quantity'], row['total_price'])
+                (row['client_id'], row['product_id'], row['price_per_item'], row['discount_per_item'],
+                 row['purchase_datetime'], row['purchase_time'], row['quantity'], row['total_price'])
             )
 
         logging.info("All data successfully inserted into the database.")
