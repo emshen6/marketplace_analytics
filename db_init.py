@@ -42,7 +42,6 @@ def check_data_available(date):
     params = {
         "date": date.strftime("%Y-%m-%d")
     }
-
     try:
         response = requests.get(API_URL, params=params)
         if response.status_code == 200 and response.json():
@@ -53,34 +52,33 @@ def check_data_available(date):
         logging.error(f"Connection error: {e}")
         return False
 
-'''
 def find_earliest_available_date():
     """Использует бинарный поиск для нахождения самой ранней доступной даты с данными."""
 
     end_date = pd.to_datetime("today")  # сегодня
     start_date = end_date - timedelta(days=365 * 5)  # пять лет назад, например
 
+    print(f'start date = {start_date}')
+    print(f'end date = {end_date}')
+
     while start_date < end_date:
         middle_date = start_date + (end_date - start_date) // 2
 
         if check_data_available(middle_date):
+            print(f'Влево! end date = {end_date}')
             end_date = middle_date  # данные есть, ищем в более ранних датах
         else:
+            print(f'Вправо! start date = {start_date}')
             start_date = middle_date + timedelta(days=1)  # данных нет, ищем в более поздних датах
 
     logging.info(f"Earliest available data found on: {start_date}")
     return start_date
-'''
 
-date = pd.to_datetime(input())
-print(check_data_available(date))
+earliest_date = find_earliest_available_date()
 
-
-'''
 params = {
     "date": earliest_date.strftime("%Y-%m-%d")
 }
-
 
 try:
     response = requests.get(API_URL, params=params)
@@ -92,4 +90,3 @@ try:
         logging.error(f"Error {response.status_code}: {response.text}")
 except requests.exceptions.RequestException as e:
     logging.error(f"Connection error: {e}")
-'''
