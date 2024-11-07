@@ -63,7 +63,10 @@ def find_earliest_available_date():
 
 def insert_data_to_db(df):
     try:
-        clients_df = df[['client_id', 'gender']].drop_duplicates().sort_values(by='client_id')
+        df = df.sort_values(by='purchase_time')
+        clients_df = df[['client_id', 'gender']].drop_duplicates()
+        products_df = df[['product_id', 'price_per_item', 'discount_per_item']].drop_duplicates()
+
         for _, row in clients_df.iterrows():
             query = (
                 "INSERT INTO clients (client_id, gender) VALUES (%s, %s) "
@@ -71,15 +74,13 @@ def insert_data_to_db(df):
             )
             database.post(query, (row['client_id'], row['gender']))
 
-        products_df = df[['product_id', 'price_per_item', 'discount_per_item']].drop_duplicates().sort_values(by='product_id')
         for _, row in products_df.iterrows():
             query = (
                 "INSERT INTO products (product_id, price_per_item, discount_per_item) VALUES (%s, %s, %s) "
                 "ON CONFLICT (product_id, price_per_item, discount_per_item) DO NOTHING"
             )
             database.post(query, (row['product_id'], row['price_per_item'], row['discount_per_item']))
-
-        df = df.sort_values(by='purchase_time')
+        
         for _, row in df.iterrows():
             query = (
                 "INSERT INTO purchases (client_id, product_id, price_per_item, discount_per_item, purchase_datetime, "
