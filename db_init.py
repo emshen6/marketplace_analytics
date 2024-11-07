@@ -76,7 +76,10 @@ def find_earliest_available_date():
     return start_date
 
 # Находим самую раннюю доступную дату с данными
-earliest_date = find_earliest_available_date()
+#earliest_date = find_earliest_available_date()
+
+earliest_date = pd.to_datetime("2021-12-31")
+print(check_data_available(earliest_date))
 
 params = {
     "date": earliest_date.strftime("%Y-%m-%d")
