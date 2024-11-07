@@ -6,6 +6,7 @@ import requests
 from datetime import timedelta
 from pgdb import PGDatabase
 import json
+import tqdm
 
 dirname = os.path.dirname(__file__)
 config = configparser.ConfigParser()
@@ -129,7 +130,7 @@ def fill_database(date):
 earliest_date = find_earliest_available_date()
 today = pd.to_datetime("today").normalize()
 
-for single_date in pd.date_range(earliest_date, today):
+for single_date in tqdm(pd.date_range(earliest_date, today)):
     fill_database(single_date)
 
 database.close()
