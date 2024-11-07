@@ -130,7 +130,6 @@ def fill_database(date):
     try:
         for i, row in clients_df.iterrows():
             query = f"INSERT INTO clients (client_id, gender) VALUES ({row['client_id']}, '{row['gender']}') ON CONFLICT (client_id) DO NOTHING')"
-            
             database.post(query)
         logging.info("Client data successfully inserted into the table.")
     except Exception as e:
@@ -138,10 +137,7 @@ def fill_database(date):
 
     try:
         for i, row in products_df.iterrows():
-            query = f"INSERT INTO products (product_id, price_per_item, discount_per_item) 
-            VALUES ({row['product_id']}, {row['price_per_item']}, {row['discount_per_item']})
-            ON CONFLICT (product_id) DO NOTHING"
-
+            query = f"INSERT INTO products (product_id, price_per_item, discount_per_item) VALUES ({row['product_id']}, {row['price_per_item']}, {row['discount_per_item']}) ON CONFLICT (product_id) DO NOTHING"
             database.post(query)
         logging.info("Product data successfully inserted into the table.")
     except Exception as e:
@@ -149,9 +145,7 @@ def fill_database(date):
 
     try:
         for i, row in df.iterrows():
-            query = f"INSERT INTO purchases (client_id, product_id, purchase_datetime, purchase_time, quantity, total_price) 
-            VALUES ({row['client_id']}, {row['product_id']}, '{row['purchase_datetime']}', '{row['purchase_time']}', {row['quantity']}, {row['total_price']})"
-            
+            query = f"INSERT INTO purchases (client_id, product_id, purchase_datetime, purchase_time, quantity, total_price) VALUES ({row['client_id']}, {row['product_id']}, '{row['purchase_datetime']}', '{row['purchase_time']}', {row['quantity']}, {row['total_price']})"
             database.post(query)
         logging.info("Purchase data successfully inserted into the table.")
     except Exception as e:
