@@ -90,21 +90,25 @@ CREATE TABLE Clients (
 );
 
 CREATE TABLE Products (
-    product_id INT PRIMARY KEY,
+    product_id INT,
     price_per_item INT,
-    discount_per_item INT
+    discount_per_item INT,
+    PRIMARY KEY (product_id, price_per_item, discount_per_item)
 );
 
 CREATE TABLE Purchases (
     purchase_id SERIAL PRIMARY KEY,
     client_id INT,
     product_id INT,
+    price_per_item INT,
+    discount_per_item INT,
     purchase_datetime DATE,
     purchase_time TIME,
     quantity INT,
     total_price INT,
     FOREIGN KEY (client_id) REFERENCES Clients(client_id),
-    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+    FOREIGN KEY (product_id, price_per_item, discount_per_item)
+        REFERENCES Products(product_id, price_per_item, discount_per_item)
 );
 ```
 
